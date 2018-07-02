@@ -1,0 +1,31 @@
+compile library version:
+ffmpeg:3.3.6 ,
+x264:latest , 
+openssl:1.0.2[xxx] ,
+libsoxr:git clone https://git.code.sf.net/p/soxr/code soxr-code
+
+1.link libx264.a undefine log2f/logf
+fixed:edit x264/common/osdep.h to below codes
+#if !HAVE_LOG2F
+#endif
+#define log2f(x) (logf(x)/0.693147180559945f)
+#define log2(x) (log(x)/0.693147180559945)
+
+2.compile openssl error pthread_atfork
+fixed:download openssl 1.0.2n version package
+
+3.yasm/nasm not found or too old. Use --disable-yasm for a crippled build.
+fixed:install yasm/nasm
+
+4.with the newest ffmpeg(via git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg)
+fixed:
+1)remove (--disable-ffserver --disable-vda)
+2)add (--disable-linux-perf)
+ in file config/module.sh 
+
+5.libsoxr cmake failed
+fixed:add #include <sys/types.h> in soxr-config.h.in file
+
+6.error:  no archive symbol table (run ranlib)
+ffmpeg compile libsoxr failed
+fixed:add -DCMAKE_SYSTEM_NAME=Linux in do-compile-libsoxr.sh cmake configure
